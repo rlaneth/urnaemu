@@ -281,17 +281,18 @@
 		margin: var(--space-2) 0 0;
 		font-size: 14px;
 	}
+	/* Block, not grid: a closed <details> still lays out an empty content row, and the grid gap
+	   before it made the bottom padding larger than the top. The padding is on the summary so the
+	   whole header opens the block, not just its text. */
 	.block {
-		display: grid;
-		gap: var(--space-2);
-		padding: var(--space-2) var(--space-3);
 		border: 1px solid var(--border);
 		border-radius: var(--radius-sm);
 	}
-	.block[open] > :not(summary) {
-		margin-top: var(--space-2);
+	.block > :not(summary) {
+		margin: 0 var(--space-3) var(--space-3);
 	}
 	summary {
+		padding: var(--space-2) var(--space-3);
 		cursor: pointer;
 		font-size: 13.5px;
 	}

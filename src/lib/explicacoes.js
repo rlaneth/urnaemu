@@ -115,7 +115,7 @@ export const EXPLICACOES = {
 		titulo: 'Identificação do eleitor',
 		acontecendo: 'O VOTA procura o eleitor no cadastro da seção e confere a identidade: pela digital quando cadastrada, ou pelo ano de nascimento quando a biometria não é usada.',
 		fazer: [{ aparelho: 'Terminal', acao: 'Siga as perguntas do terminal (ano de nascimento, confirmação) e CONFIRMA.' }],
-		real: 'Um título digitado errado gera um alerta no log ("Identificador do eleitor digitado inválido"), visível no Registro.'
+		real: 'Um título digitado errado gera um alerta no log ("Identificador do eleitor digitado inválido"), visível em Ferramentas › Visualizador de Log do VOTA.'
 	},
 	votacao: {
 		titulo: 'O eleitor está votando',
