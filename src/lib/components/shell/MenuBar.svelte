@@ -61,12 +61,6 @@
 					{@render item(t('controls.insert'), run(() => app.media.insert()), { disabled: !s?.resultMedia || s.resultMedia.present })}
 					{@render item(t('controls.eject'), run(() => app.media.eject()), { disabled: !s?.resultMedia?.present })}
 				</Menubar.Group>
-				<Menubar.Separator class="menu-separator" />
-				<Menubar.Group>
-					<Menubar.GroupHeading class="menu-heading">{t('menu.scanner')}</Menubar.GroupHeading>
-					{@render item(t('controls.scannerAccept'), run(() => app.scanner.accept()), { disabled: !s?.scanner.installed })}
-					{@render item(t('controls.scannerTimeout'), run(() => app.scanner.timeout()), { disabled: !s?.scanner.installed })}
-				</Menubar.Group>
 			</Menubar.Content>
 		</Menubar.Portal>
 	</Menubar.Menu>
