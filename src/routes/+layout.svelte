@@ -10,6 +10,6 @@
 	let { children } = $props();
 </script>
 
-{@render children()}
-
-<MobileGate />
+<MobileGate>
+	{@render children()}
+</MobileGate>

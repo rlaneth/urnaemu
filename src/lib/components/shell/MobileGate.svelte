@@ -2,25 +2,36 @@
 	// A soft gate for small screens: the layout (urna + terminal side by side, floating
 	// windows) is built for a computer and does not reflow for a phone. We don't block —
 	// we warn, and let the user load anyway after a short countdown.
-	import { onMount } from 'svelte';
+	//
+	// The app is not rendered behind the warning: its wide layout would stretch a phone's
+	// layout viewport and leave the warning zoomed out. The check runs once, at load (a
+	// later resize or rotation never interrupts a running session), and a dismissal is
+	// remembered so the warning is shown only on the first visit.
 	import { t } from '#lib/i18n/t.js';
 
+	let { children } = $props();
+
 	const QUERY = '(max-width: 760px), (max-height: 520px) and (pointer: coarse)';
+	const KEY = 'urnaemu:aviso-celular';
 	const WAIT = 5;
 
-	let small = $state(false);
-	let dismissed = $state(false);
+	function alreadyDismissed() {
+		try {
+			return localStorage.getItem(KEY) === '1';
+		} catch {
+			return false;
+		}
+	}
+
+	let visible = $state(window.matchMedia(QUERY).matches && !alreadyDismissed());
 	let remaining = $state(WAIT);
 
-	const visible = $derived(small && !dismissed);
-
-	onMount(() => {
-		const mq = window.matchMedia(QUERY);
-		const sync = () => (small = mq.matches);
-		sync();
-		mq.addEventListener('change', sync);
-		return () => mq.removeEventListener('change', sync);
-	});
+	function proceed() {
+		try {
+			localStorage.setItem(KEY, '1');
+		} catch {}
+		visible = false;
+	}
 
 	// Count down only while the overlay is actually showing.
 	$effect(() => {
@@ -40,11 +51,13 @@
 			</svg>
 			<h1 id="mg-title">{t('mobile.title')}</h1>
 			<p id="mg-body">{t('mobile.body')}</p>
-			<button class="load" disabled={remaining > 0} onclick={() => (dismissed = true)}>
+			<button class="load" disabled={remaining > 0} onclick={proceed}>
 				{remaining > 0 ? t('mobile.waiting', { n: remaining }) : t('mobile.loadAnyway')}
 			</button>
 		</div>
 	</div>
+{:else}
+	{@render children()}
 {/if}
 
 <style>
@@ -55,16 +68,19 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 24px;
+		padding: 24px 16px;
 		background: var(--bg);
-		overflow: auto;
+		overflow-y: auto;
 	}
 	.card {
 		display: grid;
 		justify-items: center;
 		gap: var(--space-3);
+		width: 100%;
 		max-width: 420px;
+		margin: auto;
 		text-align: center;
+		overflow-wrap: anywhere;
 	}
 	.icon {
 		width: 56px;
