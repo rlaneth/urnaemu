@@ -1,7 +1,7 @@
 // Test identities of the emulator: a P-521 key with its self-signed certificate, kept in
 // IndexedDB so the same identity (and the same certificate) is reused across visits.
 // Not credentials of the Justiça Eleitoral. Import/export as PEM (certificate + PKCS#8 key).
-import { createWebCryptoProvider } from '../services/webcrypto-provider.js';
+import { createWebCryptoProvider, DEFAULT_CERTIFICATE_FIELDS } from '../services/webcrypto-provider.js';
 
 const DB = 'urnaemu-identidades', STORE = 'identidades', ACTIVE_KEY = 'urnaemu:identidade:ativa';
 
@@ -117,6 +117,17 @@ export async function createIdentity(fields, name) {
 	const provider = await createWebCryptoProvider({ profile: 'P-521', certificateFields: fields });
 	await provider.selfTest();
 	return store(provider, name);
+}
+/**
+ * An identity whose certificate covers `day` (AAAA-MM-DD, the election day): the first stored one
+ * that does, or else a new one with the default certificate fields (Início › Sessão oficial).
+ */
+export async function identityCovering(day) {
+	const found = (await listIdentities()).find((i) => i.info && i.info.notBefore.slice(0, 10) <= day && i.info.notAfter.slice(0, 10) >= day);
+	if (found) return found;
+	const at = Date.parse(day + 'T12:00:00Z'), now = Date.now();
+	const notBefore = new Date(Math.min(now, at) - 86400000).toISOString(), notAfter = new Date(Math.max(now, at) + 86400000 * 730).toISOString();
+	return createIdentity({ ...DEFAULT_CERTIFICATE_FIELDS, serial: '', notBefore, notAfter }, 'Identidade de teste (automática)');
 }
 /** Import from PEM text containing a CERTIFICATE and a PRIVATE KEY (PKCS#8, P-521). */
 export async function importIdentityPem(text, name) {

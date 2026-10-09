@@ -1,7 +1,8 @@
 // A zona created in the load editor (load/places-edit.js) is a valid relocation target, and a
 // município can be renamed: VOTA boots the media moved into the new zona, and in an official
-// session the BU it writes carries the new zona/seção and verifies. (Creating new município
-// numbers is intentionally not supported — VOTA rejects them; see places-edit.js.)
+// session the BU it writes carries the new zona/seção and verifies. A município can also take
+// another código: the section's own município renumbered (lists re-sorted) boots in municipal and
+// state-wide elections, and the official BU carries the new código and verifies.
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
 import { connect, evidencePath } from '../tools/screen-session.mjs';
@@ -53,8 +54,34 @@ try {
 	assert.match(report.official.path, new RegExp(String(MUN).padStart(5, '0') + String(ZONA).padStart(4, '0') + String(SECAO).padStart(4, '0') + '-bu\\.dat$'));
 	assert.match(report.official.bu, new RegExp(`"zona":${ZONA}\\b|"zona":"0*${ZONA}"`));
 	assert.match(report.official.bu, /"secao":12\b|"secao":"0012"/);
+
+	// 3. Renumber the section's município 1 → 71072 (so the lists must be re-sorted), official, both
+	// election types: full session and BU.
+	const CODIGO = 71072;
+	for (const scenario of ['municipal-t1', 'geral-t1']) {
+		await b.load(scenario);
+		await b.evaluate(`(async()=>{const e=urnaEmu.loadEditor;if(!e.provider)await e.useKey();await e.generateOfficial();await e.renumberMunicipio(1,${CODIGO})})()`);
+		await applyAndBoot();
+		const boot = await b.evaluate('({municipio:urnaEmu.sessionConfig.municipio,status:urnaEmu.loadEditor.status.code,err:String(urnaEmu.error||"")})');
+		assert.equal(boot.status, 'accepted', `${scenario}: ${boot.err}`);
+		assert.equal(boot.municipio, CODIGO);
+		await b.evaluate('qa.boot()');
+		await b.evaluate(`qa.register(${JSON.stringify(voter)},[true])`);
+		await b.evaluate(`qa.authorize(${JSON.stringify(voter)})`);
+		await b.evaluate('qa.vote(0)');
+		await b.evaluate(`qa.close(${JSON.stringify({ ...voter, closeTime: '2026-10-04T20:05:00.000Z' })})`);
+		report[scenario] = await b.evaluate(`(async()=>{
+			const fs=Module.FS,found=[];(function walk(p){for(const n of fs.readdir(p)){if(n==='.'||n==='..')continue;const f=p+'/'+n;let st;try{st=fs.stat(f)}catch{continue}if(fs.isDir(st.mode))walk(f);else if(/-bu\\.dat$/.test(n))found.push(f)}})('/dsk');
+			if(!found.length)throw Error('No BU written');
+			const r=await urnaEmu.verifyResults(found[0]);
+			return {path:found[0],ok:r.ok,failed:r.checks.filter(c=>!c.ok),id:JSON.stringify(r.bu.identificacaoSecao,(k,v)=>typeof v==='bigint'?Number(v):v)};
+		})()`);
+		assert.ok(report[scenario].ok, `${scenario}: BU verification failed: ` + JSON.stringify(report[scenario].failed));
+		assert.match(report[scenario].path, new RegExp(String(CODIGO).padStart(5, '0') + '00010001-bu\\.dat$'));
+		assert.match(report[scenario].id, new RegExp(`"municipio":${CODIGO}\\b`));
+	}
 	fs.writeFileSync(evidencePath('places-edit.json'), JSON.stringify(report, null, 2) + '\n');
-	console.log(`PASS: created zona ${ZONA} and renamed município; VOTA boots the section moved into it and the official BU (${report.official.path}) carries the new place and verifies.`);
+	console.log(`PASS: created zona ${ZONA} and renamed município; VOTA boots the section moved into it and the official BU (${report.official.path}) carries the new place and verifies; município 1 renumbered to 71072 boots and its official BU verifies in municipal and state-wide elections.`);
 } finally {
 	b.close();
 }

@@ -294,7 +294,7 @@ export function createEngine({ notify = () => {} } = {}) {
 				log('simulated-load-history', overlay.state);
 			}
 		}
-		if (!ok) throw Error('O VOTA não conseguiu iniciar com esta mídia de carga (votaInit retornou 0); o motivo, quando o VOTA informa, está no Registro');
+		if (!ok) throw Error('O VOTA não conseguiu iniciar com esta mídia de carga (votaInit retornou 0); o motivo, quando o VOTA informa, está em Ferramentas › Visualizador de Log do VOTA');
 		// Browser playback is always on: VOTA decides when a voter uses audio. (The bridge leaves it
 		// off unless the voting-only mode starts every voter with audio.)
 		await call('votaSetAudioEnabled', null, ['number'], [1]);
@@ -740,8 +740,16 @@ export function createEngine({ notify = () => {} } = {}) {
 	async function startFollowUp() {
 		const editor = app.loadEditor;
 		if (options.start === 'official') {
-			// Official sessions are prepared in the Mídia de carga window (identity, eleitorado,
-			// candidates, signatures): the start screen only opens it on this scenario.
+			// Official sessions are prepared in the Mídia de carga window (eleitorado, candidates,
+			// place): it opens on the official media, generated here and signed with the identity in
+			// use, or else one whose certificate covers the election day (created if none does).
+			if (editor.readConfig().fase !== 'of') {
+				if (!editor.provider) {
+					const { identityCovering } = await import('./load/identity-store.js');
+					await editor.useIdentity(await identityCovering(app.clock.electionDayPreset().local.slice(0, 10)));
+				}
+				await editor.generateOfficial();
+			}
 			app.officialSetup = true;
 			notify();
 			return;

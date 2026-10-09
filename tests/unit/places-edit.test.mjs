@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import assert from 'node:assert/strict';
-import { renameMunicipio, createZona, changeUf } from '#lib/engine/load/places-edit.js';
+import { renameMunicipio, renumberMunicipio, createZona, changeUf } from '#lib/engine/load/places-edit.js';
 import { places, relocate } from '#lib/engine/load/section-relocation.js';
 import { VotaLoadFormat as F } from '#lib/engine/load/load-format.js';
 
@@ -51,6 +51,27 @@ for (const scenario of ['municipal-t1', 'geral-t1']) {
 	for (const [p, b] of files) assert.ok(same(back.files.get(p), b), `${scenario}: ${p} uf round trip`);
 	assert.throws(() => changeUf(files, { uf: 'ac' }, 'xyz'), /UF inválida/);
 
+	// Another código for a município: every list follows (sorted), and the section moves with it.
+	const lists = (f) => Object.fromEntries([...f.keys()].filter((p) => /-(mu|mz|cm|cfm|ce)\.dat$/.test(p)).map((p) => {
+		const r = F.parse(f.get(p)), v = (n) => parseInt(n.hex, 16);
+		const l = /-ce\.dat$/.test(p) ? r.children[8].children.map(v) : /-cfm\.dat$/.test(p) ? r.children[1].children.map((e) => v(e.children[0])) : /-cm\.dat$/.test(p) ? r.children[1].children[0].children[2].children.map((e) => v(e.children[0])) : r.children[1].children[0].children[1].children.map((e) => v(e.children[0]));
+		return [p.split('/').pop(), l];
+	}));
+	const renumbered = renumberMunicipio(files, home, 1, 71072);
+	assert.equal(renumbered.config.municipio, 71072);
+	for (const [name, l] of Object.entries(lists(renumbered.files))) assert.deepEqual(l, [2, 3, 71072], `${scenario}: ${name} renumbered and sorted`);
+	assert.ok([...renumbered.files.keys()].some((n) => n.endsWith('7107200010001-lo.dat')), `${scenario}: section moved with its município`);
+	assert.ok(![...renumbered.files.keys()].some((n) => /0000100010001/.test(n)), `${scenario}: no file left at the old código`);
+	assert.equal(places(renumbered.files).find((p) => p.municipio === 71072).nome, places(files).find((p) => p.municipio === 1).nome);
+	// Another município (not the section's): only the lists change.
+	const other = renumberMunicipio(files, home, 3, 1392);
+	assert.equal(other.config.municipio, 1);
+	assert.deepEqual([...other.files.keys()].sort(), [...files.keys()].sort(), `${scenario}: no file renamed`);
+	for (const [name, l] of Object.entries(lists(other.files))) assert.deepEqual(l, [1, 2, 1392], `${scenario}: ${name}`);
+	assert.throws(() => renumberMunicipio(files, home, 1, 2), /já é de outro município/);
+	assert.throws(() => renumberMunicipio(files, home, 9, 10), /não existe/);
+	assert.throws(() => renumberMunicipio(files, home, 1, 100000), /de 1 a 99999/);
+
 	// Guard rails.
 	assert.throws(() => createZona(files, 1, 1), /já existe/);
 	assert.throws(() => createZona(files, 9, 9), /não existe/);
@@ -58,4 +79,4 @@ for (const scenario of ['municipal-t1', 'geral-t1']) {
 	assert.throws(() => renameMunicipio(files, 9, 'X'), /não existe/);
 	assert.throws(() => renameMunicipio(files, 1, ''), /em branco/);
 }
-console.log('PASS: município rename, new-zona creation and UF change (round-trips byte for byte); new zonas are relocatable and keep the originals intact.');
+console.log('PASS: município rename and renumbering, new-zona creation and UF change (round-trips byte for byte); new zonas are relocatable and keep the originals intact.');

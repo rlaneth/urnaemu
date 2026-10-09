@@ -23,7 +23,7 @@ export const generateOfficialLoad = async function(source,provider){
   if(f.path!=='/dsk/fi/serialv.dat'&&!f.path.endsWith('-rdj.dat')&&bytes.length){const n=F.parse(bytes);walk(n);
    if(f.path.endsWith('.vsc')){if(n.children?.[3]?.tag!==4)throw Error('Envelope de assinatura de entrada não suportado');const catalog=F.parse(F.unhex(n.children[3].hex));walk(catalog);n.children[3].hex=F.hex(F.encode(catalog));}
    if(/infomidia-fv-\d-t\.dat$/.test(f.path)){if(n.children?.[1]?.tag!==10||n.children[1].hex!=='03')throw Error('Fase inesperada nos metadados da mídia');n.children[1].hex='02';loadTimestamp=n.children[5]?.children?.[3]?.text;}
-   if(f.path.endsWith('-cp.dat'))n.children[1].text=n.children[1].text.replace(/^Treinamento\s+/i,'')+' — EMULADOR';
+   if(f.path.endsWith('-cp.dat'))n.children[1].text=n.children[1].text.replace(/^Treinamento\s+/i,'')+' - EMULADOR';
    if(f.path.endsWith('-ce.dat')){if(n.children?.[5]?.tag!==2)throw Error('Campo de ano da eleição não suportado');n.children[5].hex=Number(date.slice(0,4)).toString(16).padStart(4,'0');}
    output=F.encode(n);
   }

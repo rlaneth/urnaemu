@@ -158,10 +158,18 @@ restaura a mídia de treinamento do cenário. A ponte da versão web aceita `ofi
 como fase oficial, e não `of`: o valor `of` do editor é convertido para `oficial` antes de
 chegar ao VOTA (literais de comparação nos endereços 157370 e 142797 da função `votaInit`).
 
-**Local.** Município, zona e seção podem ser mudados juntos. Os municípios do cenário podem ser
-renomeados e é possível criar novas zonas; a seção é livre. Não é possível criar números de
-município novos: o VOTA recusa, já na inicialização, municípios fora do conjunto do cenário (no
-simulador, 1, 2 e 3 — "Minha Cidade" —, cada um com uma zona de mesmo número). O local aparece:
+**Local.** Município, zona e seção podem ser mudados juntos; a seção é livre e é possível criar
+novas zonas. O simulador traz três municípios (1, 2 e 3 — "Minha Cidade" —, cada um com uma zona
+de mesmo número), e cada um pode receber outro nome e outro código (1 a 99999, como o código do
+TSE de uma cidade real). O VOTA não tem uma tabela de códigos: ao iniciar
+(`CConfiguracaoEleicao`), procura o município da seção na configuração por município
+(`-cfm.dat`; se faltar: "Configuração do município N não encontrada") e na lista de municípios de
+cada eleição (`-ce.dat`, campo 8; se faltar, o VOTA calcula o resumo de um conjunto vazio e falha
+com "hash de dados vazios"). Por isso o novo código substitui o antigo nas cinco listas que
+declaram os municípios — `-mu`, `-mz`, `-cm`, `-cfm` e cada `-ce` —, mantidas em ordem crescente;
+se a seção está no município, ela o acompanha (como em "Mudar o local"). Verificado por
+experimento: a mídia renumerada inicia, e a sessão oficial grava um BU que confere. Não foi
+testado se o VOTA aceita um quarto município. O local aparece:
 
 - no código de 13 dígitos município(5) zona(4) seção(4) dos arquivos da seção e do local de
   votação, e no código de 9 dígitos município(5) zona(4) dos arquivos da zona e dos `.pid`;
@@ -177,15 +185,23 @@ simulador, 1, 2 e 3 — "Minha Cidade" —, cada um com uma zona de mesmo númer
 Mudar o local atualiza todos esses lugares e reassina a mídia oficial. A versão web também
 grava uma correspondência fixa (município 1, zona 1, seção 1) nos dados da urna que vão para
 o BU; o emulador a ajusta para o local configurado, senão o BU e o RDV discordariam (veja
-**Ajuda › Fidelidade e limitações** no emulador). Turno, processo e cargos vêm do cenário.
+**Ajuda › Fidelidade e limitações** no emulador). Turno, processo e cargos vêm do cenário, que
+pode ser trocado em **Eleição e seção › Eleição** (a mídia é recarregada do começo).
 
 A UF também pode ser trocada (experimental): o editor reescreve a sigla da UF nos nomes dos
 arquivos e no conteúdo (`-mu`, `-mz`, `-cm`, `-cp`, `-lo` e os pacotes de candidatos), atualiza
 as referências nos `.pid` e nos catálogos de assinatura e reassina a mídia oficial; os eleitores
-mantêm o código de origem nos títulos (o VOTA os aceita). Ao contrário dos municípios, o VOTA não
+mantêm o código de origem nos títulos (o VOTA os aceita). Como no caso dos municípios, o VOTA não
 valida a UF contra uma tabela interna, então uma UF que o cenário não traz também é aceita.
 
 ## Mídia oficial
+
+Pela tela de inicialização, **Sessão oficial** já abre a janela Mídia de carga com a mídia
+oficial gerada e assinada: com a identidade em uso, ou com uma identidade salva cujo certificado
+cubra o dia da eleição, ou com uma nova, criada automaticamente. Edite eleitorado, candidatos e
+local, se quiser, e use **Resumo › Iniciar sessão oficial**.
+
+A partir de uma mídia de treinamento:
 
 1. Escolha ou crie uma identidade em **Identidade**.
 2. Edite eleitorado e candidatos, se quiser, e salve.
@@ -196,7 +212,8 @@ A geração:
 - converte os caminhos `tNNNNN…` e os nomes de pacotes e catálogos para `oNNNNN…`;
 - converte os enumerados de fase nos PID, nos identificadores de pacote SCUE e nos metadados
   `infomidia`;
-- alinha o ano da eleição com a data do turno e identifica o processo como EMULADOR;
+- alinha o ano da eleição com a data do turno e identifica o processo como "- EMULADOR" (com
+  hífen: a fonte da urna não tem o travessão);
 - mantém o `serialv.dat`, as fotos e o arquivo de decisões judiciais (`-rdj`);
 - regenera os catálogos `.vsc` com a identidade escolhida e assina a mídia, incluindo
   metadados da geração e o relógio (dia da eleição, 08:00);

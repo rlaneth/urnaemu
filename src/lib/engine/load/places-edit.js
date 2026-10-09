@@ -1,19 +1,25 @@
-// Rename the municípios a load media declares, and create new zonas within them, so the section
-// can then be relocated (section-relocation.js) into a zona the bundled scenario did not ship.
-// Pure transforms: (files, …) → { files, changes }, never mutating the input map.
+// Edit the municípios a load media declares (new código, new name) and create new zonas within
+// them, so the section can then be relocated (section-relocation.js) into a place the bundled
+// scenario did not ship. Pure transforms: (files, …) → { files, changes }, never mutating the input.
 //
-// NOTE: creating or renumbering MUNICÍPIOS is intentionally not offered. VOTA rejects município
-// numbers outside the set the scenario ships (1, 2, 3), failing at boot inside
-// CConfiguracaoEleicao with "hash de dados vazios" — verified for both a freshly synthesized
-// município and an existing one renumbered to a new code. New ZONA numbers, by contrast, boot and
-// produce a valid BU. So we expose renaming (name) + new zonas, and the UI keeps município numbers
-// from the scenario.
+// Every scenario declares three municípios (1, 2, 3), and any of them can take another código
+// (1–99999, e.g. a real TSE code). VOTA has no baked table of códigos: at boot
+// (CConfiguracaoEleicao) it looks the section's município up in the per-município configuration
+// (-cfm.dat: "Configuração do município N não encontrada" when missing) and in each election's
+// município list (-ce.dat /8: an empty set there fails with "hash de dados vazios"). So a new
+// código must replace the old one in all five lists below — verified by experiment: municipal and
+// state-wide media renumbered this way boot, and official sessions write a BU that verifies.
+// Whether VOTA would also accept a fourth município (an added record) was not tested.
 //
 // Structure (decoded from the bundled media, same path places() uses):
 //  - -mu.dat  children[1].children[0].children[1].children = município records [2 code, 27 nome, …]
 //  - -mz.dat  children[1].children[0].children[1].children = pairs [2 município, 2 zona]
+//  - -cm.dat  children[1].children[0].children[2].children = timezone records [2 code, minutos, BOOLEAN]
+//  - -cfm.dat children[1].children = configuration records [2 code, [cronograma]]
+//  - -ce.dat  children[8].children = the election's municípios [2 code, …] (one file per election)
 //  - -lo.dat  children[3] = the current section's município record [2 código, 27 nome, …]
 import { VotaLoadFormat as F } from './load-format.js';
+import { relocate } from './section-relocation.js';
 
 function intHex(n) {
 	let h = n.toString(16);
@@ -38,6 +44,10 @@ function checkName(nome) {
 	if (value.length > 60) throw Error('O nome do município é longo demais (máximo 60 caracteres)');
 	F.textBytes(value); // throws on a character the urna encoding (Windows-1252) cannot represent
 	return value;
+}
+function checkCodigo(n) {
+	if (!Number.isInteger(n) || n < 1 || n > 99999) throw Error('O código do município deve ser um número de 1 a 99999');
+	return n;
 }
 function checkZona(n) {
 	if (!Number.isInteger(n) || n < 1 || n > 9999) throw Error('O número da zona deve ser de 1 a 9999');
@@ -74,7 +84,63 @@ export function renameMunicipio(files, municipio, nome) {
 	return { files: out, changes };
 }
 
-// Change the media's UF. Experimental but verified end to end: VOTA (unlike new município numbers)
+// The município lists, as [file pattern, the list node, the código of an entry]. All lists are
+// kept in ascending código order, as the scenario ships them.
+const MUNICIPIO_LISTS = [
+	[/-mu\.dat$/, (root) => root.children[1].children[0].children[1], (e) => e.children[0]],
+	[/-mz\.dat$/, (root) => root.children[1].children[0].children[1], (e) => e.children[0]],
+	[/-cm\.dat$/, (root) => root.children[1].children[0].children[2], (e) => e.children[0]],
+	[/-cfm\.dat$/, (root) => root.children[1], (e) => e.children[0]],
+	[/-ce\.dat$/, (root) => root.children[8], (e) => e]
+];
+
+/**
+ * Give a declared município another código in every list that declares it (see the note above).
+ * If the current section is in that município, the section moves with it (relocate: file names,
+ * headers, -lo records, municipal candidate packages, catalogs). Returns the new config too.
+ */
+export function renumberMunicipio(files, config, from, to) {
+	from = Number(from);
+	to = checkCodigo(Number(to));
+	if (to === from) return { files: new Map(files), config: { ...config }, changes: [] };
+	const known = muRecords(F.parse(files.get(requireFile(files, /-mu\.dat$/, '-mu.dat')))).children.map((m) => intValue(m.children[0]));
+	if (!known.includes(from)) throw Error(`O município ${from} não existe nesta mídia`);
+	if (known.includes(to)) throw Error(`O código ${to} já é de outro município desta mídia`);
+
+	let out = new Map(files);
+	const changes = [];
+	for (const [re, list, codeOf] of MUNICIPIO_LISTS) {
+		const paths = [...files.keys()].filter((p) => re.test(p));
+		if (!paths.length) throw Error(`Falta o arquivo ${re.source.replace(/\\|\$/g, '')} nesta mídia`);
+		for (const path of paths) {
+			const root = F.parse(files.get(path)), node = list(root);
+			if (!node?.children) throw Error(`Lista de municípios não encontrada em ${path}`);
+			let edits = 0;
+			for (const entry of node.children) {
+				const code = codeOf(entry);
+				if (intValue(code) === from) {
+					code.hex = intHex(to);
+					edits++;
+				}
+			}
+			if (!edits) throw Error(`O município ${from} não está em ${path}`);
+			// Stable sort: -mz keeps each município's zonas in their order.
+			node.children.sort((a, b) => intValue(codeOf(a)) - intValue(codeOf(b)));
+			out.set(path, F.encode(root));
+			changes.push({ path, edits });
+		}
+	}
+	let next = { ...config };
+	if (config.municipio === from) {
+		const moved = relocate(out, config, { municipio: to });
+		out = moved.files;
+		changes.push(...moved.changes);
+		next.municipio = to;
+	}
+	return { files: out, config: next, changes };
+}
+
+// Change the media's UF. Experimental but verified end to end: VOTA (as with município códigos)
 // does not validate the UF against a baked table, so a transformed media — even to a UF the bundle
 // never shipped — boots, lets a voter vote, and writes a BU that verifies. This rewrites the
 // 2-letter UF token in every file name (the national "br00000" packages have no state token and

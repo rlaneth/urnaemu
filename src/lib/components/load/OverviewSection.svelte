@@ -20,7 +20,8 @@
 		if (candidateDraft.dirty) throw Error(t('loadui.overview.unsavedCandidates'));
 		preparing = true;
 		try {
-			await app.loadEditor.generateOfficial();
+			// From Início › Sessão oficial the media is already official: only apply it.
+			if (!official) await app.loadEditor.generateOfficial();
 			await app.loadEditor.apply();
 		} finally {
 			preparing = false;
@@ -70,9 +71,9 @@
 				<span class="n">3</span>
 				<div>
 					<strong>{t('loadui.overview.step3')}</strong>
-					<p class="small muted">{candidateDraft.dirty ? t('loadui.overview.unsavedCandidates') : t('loadui.overview.step3Body')}</p>
+					<p class="small muted">{candidateDraft.dirty ? t('loadui.overview.unsavedCandidates') : official ? t('loadui.overview.step3BodyOfficial') : t('loadui.overview.step3Body')}</p>
 					<button class="btn primary" disabled={voterDraft.dirty || candidateDraft.dirty || preparing || !load?.provider} onclick={prepare} data-testid="load-prepare-official">
-						{preparing ? t('loadui.overview.preparing') : t('loadui.overview.prepare')}
+						{preparing ? t('loadui.overview.preparing') : official ? t('loadui.overview.start') : t('loadui.overview.prepare')}
 					</button>
 				</div>
 			</li>

@@ -1,4 +1,4 @@
-// Changing the media's UF (load/places-edit.js changeUf): VOTA — unlike new município numbers —
+// Changing the media's UF (load/places-edit.js changeUf): VOTA — as with município códigos —
 // does not validate the UF against a baked table, so a media transformed to a UF the bundle never
 // shipped boots, lets a voter vote, and writes a BU that carries the new UF and verifies. Covers
 // both orders (UF change before and after generating the official media / re-signing).

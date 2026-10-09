@@ -6,7 +6,7 @@ import { generateOfficialLoad } from './official-load.js';
 import { createWebCryptoProvider } from '../services/webcrypto-provider.js';
 import { getIdentity, providerFor, activeIdentityId, setActiveIdentity } from './identity-store.js';
 import { relocate, places } from './section-relocation.js';
-import { renameMunicipio as renameMunicipioFiles, createZona as createZonaFiles, changeUf as changeUfFiles } from './places-edit.js';
+import { renameMunicipio as renameMunicipioFiles, renumberMunicipio as renumberMunicipioFiles, createZona as createZonaFiles, changeUf as changeUfFiles } from './places-edit.js';
 import { readEleitorado } from './eleitorado.js';
 import { readCandidates, writeCandidates, validateCandidates, nextCode, candidatePhoto, missingPhotos } from './candidates.js';
 import { setVoters as writeVoters, fictitiousVoters, parseVotersCsv, votersToCsv, validateVoters } from './eleitorado-generator.js';
@@ -335,6 +335,19 @@ export function createLoadEditor({ app, log, notify }) {
 	}
 	const renameMunicipio = (municipio, nome) =>
 		editPlaces((f) => renameMunicipioFiles(f, Number(municipio), nome), () => `Município ${Number(municipio)} renomeado para "${String(nome).trim()}".`);
+	// Another código for a declared município (places-edit.js); the section moves with it.
+	async function renumberMunicipio(municipio, codigo) {
+		if (config.fase === 'of' && !provider) throw Error('Escolha uma identidade para reassinar a mídia oficial.');
+		const result = renumberMunicipioFiles(files, config, municipio, codigo);
+		if (!result.changes.length) return result;
+		files = result.files;
+		config = result.config;
+		signature = null;
+		await resignIfOfficial();
+		changed();
+		setStatus('places-changed', `O município ${Number(municipio)} agora tem o código ${Number(codigo)}.${config.fase === 'of' ? ' Arquivos reassinados.' : ''} Aplique para usar o novo local.`);
+		return result;
+	}
 	const createZona = (municipio, zona) =>
 		editPlaces((f) => createZonaFiles(f, Number(municipio), Number(zona)), () => `Zona ${Number(zona)} adicionada ao município ${Number(municipio)}.`);
 	// Change the media's UF (places-edit.js). Experimental; official media is re-signed.
@@ -388,6 +401,18 @@ export function createLoadEditor({ app, log, notify }) {
 		const q = new URLSearchParams(location.search);
 		q.delete('loadDraft');
 		q.delete('session');
+		location.search = q;
+	}
+	/** Discard this media and reload with another bundled scenario (official setup stays open). */
+	function switchScenario(id, { official = false } = {}) {
+		if (!app.scenarios.some((s) => s.id === id)) throw Error('Cenário desconhecido');
+		sessionStorage.removeItem(DRAFT_STORAGE_KEY);
+		sessionStorage.removeItem(KEY_STORAGE_KEY);
+		const q = new URLSearchParams(location.search);
+		q.set('scenario', id);
+		q.delete('loadDraft');
+		q.delete('session');
+		if (official) q.set('start', 'official');
 		location.search = q;
 	}
 	function paramsDraft() {
@@ -467,6 +492,7 @@ export function createLoadEditor({ app, log, notify }) {
 		changeSection,
 		changeLocation,
 		renameMunicipio,
+		renumberMunicipio,
 		createZona,
 		changeUf,
 		places: () => places(files),
@@ -484,6 +510,7 @@ export function createLoadEditor({ app, log, notify }) {
 		verify,
 		exportPackage,
 		reset,
+		switchScenario,
 		clockChanged() {
 			draftClock = null;
 			changed();

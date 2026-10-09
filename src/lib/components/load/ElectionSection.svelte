@@ -17,17 +17,25 @@
 			: []
 	);
 	// UF is editable (experimental); turno/processo and the cargos stay from the scenario.
+	// config is a fresh object on every engine update (several per second while VOTA runs): sync
+	// the form from its primitive values only, or each update would undo the user's choice.
+	const currentUf = $derived(config?.uf ?? '');
 	let newUf = $state('');
 	$effect(() => {
-		config;
-		newUf = config?.uf ?? '';
+		newUf = currentUf;
 	});
 	const changeUf = action(app, () => app.loadEditor.changeUf(newUf));
+	// Another election (bundled scenario): reloads its media, keeping the official setup open.
+	let newScenario = $state($engine?.scenario?.id ?? '');
+	const switchScenario = action(app, () => app.loadEditor.switchScenario(newScenario, { official: config?.fase === 'of' }));
 	// Places the media declares (municipalities and their zones).
 	const places = $derived((load?.revision, app.loadEditor.places()));
 	let place = $state({ municipio: null, zona: null, secao: null });
+	const currentPlace = $derived(config ? `${config.municipio}/${config.zona}/${config.secao}` : '');
 	$effect(() => {
-		if (config && place.municipio === null) place = { municipio: config.municipio, zona: config.zona, secao: config.secao };
+		if (!currentPlace) return;
+		const [municipio, zona, secao] = currentPlace.split('/').map(Number);
+		place = { municipio, zona, secao };
 	});
 	const zonas = $derived(places.find((p) => p.municipio === Number(place.municipio))?.zonas ?? []);
 	// Picking another município selects its first zone.
@@ -41,19 +49,28 @@
 	const toTraining = action(app, () => app.loadEditor.reset());
 	const changeLocation = action(app, () => app.loadEditor.changeLocation({ municipio: Number(place.municipio), zona: Number(place.zona), secao: Number(place.secao) }));
 
-	// Rename the municípios the media declares and add new zonas (places-edit.js, via the load
-	// editor). Município numbers come from the scenario: VOTA rejects new ones.
+	// Edit the municípios the media declares (código and name) and add new zonas (places-edit.js,
+	// via the load editor). The scenario declares three municípios; each can take any código.
 	let editingPlaces = $state(false);
-	let renameName = $state('');
+	let editCodigo = $state('');
+	let editName = $state('');
 	let newZona = $state('');
 	const selectedName = $derived(places.find((p) => p.municipio === Number(place.municipio))?.nome ?? '');
-	// Reset the rename field to the selected município's current name whenever the selection changes.
+	// Reset the fields to the selected município whenever the selection (or its name) changes.
 	$effect(() => {
-		place.municipio;
-		renameName = selectedName;
+		editCodigo = place.municipio ?? '';
+		editName = selectedName;
 	});
+	const municipioEdited = $derived(!!editName.trim() && Number(editCodigo) > 0 && (Number(editCodigo) !== Number(place.municipio) || editName.trim() !== selectedName));
 
-	const renameMunicipio = action(app, () => app.loadEditor.renameMunicipio(Number(place.municipio), renameName));
+	const saveMunicipio = action(app, async () => {
+		const from = Number(place.municipio), to = Number(editCodigo), nome = editName.trim();
+		if (to !== from) {
+			await app.loadEditor.renumberMunicipio(from, to);
+			place.municipio = to;
+		}
+		if (nome !== selectedName) await app.loadEditor.renameMunicipio(to, nome);
+	});
 	const addZona = action(app, async () => {
 		const zona = Number(newZona);
 		await app.loadEditor.createZona(Number(place.municipio), zona);
@@ -102,10 +119,12 @@
 			<div class="places-edit" data-testid="election-places-edit">
 				<p class="small muted">{t('loadui.election.editPlacesHint')}</p>
 				<div class="place-form">
-					<label class="field grow">{t('loadui.election.renameMunicipality')}
-						<input class="input" bind:value={renameName} data-testid="rename-municipio-name" />
+					<span class="group-label">{t('loadui.election.editMunicipality')}</span>
+					<label class="field num">{t('loadui.election.municipalityCode')}<input class="input mono" type="number" min="1" max="99999" bind:value={editCodigo} data-testid="edit-municipio-codigo" /></label>
+					<label class="field grow">{t('loadui.election.municipalityName')}
+						<input class="input" bind:value={editName} data-testid="rename-municipio-name" />
 					</label>
-					<button class="btn small" disabled={!renameName.trim() || renameName.trim() === selectedName} onclick={renameMunicipio} data-testid="rename-municipio">{t('loadui.election.rename')}</button>
+					<button class="btn small" disabled={!municipioEdited} onclick={saveMunicipio} data-testid="rename-municipio">{t('loadui.election.saveMunicipality')}</button>
 				</div>
 				<div class="place-form">
 					<span class="group-label">{t('loadui.election.newZone')}</span>
@@ -119,6 +138,15 @@
 	<section class="card">
 		<h3>{t('loadui.election.fromScenario')}</h3>
 		<p class="small muted">{t('loadui.election.fromScenarioBody')}</p>
+		<div class="uf-edit">
+			<label class="field">
+				<span class="group-label">{t('loadui.election.scenario')}</span>
+				<select class="input" bind:value={newScenario} data-testid="election-scenario">
+					{#each app.scenarios as s (s.id)}<option value={s.id}>{s.label}</option>{/each}
+				</select>
+			</label>
+			<button class="btn small" disabled={!newScenario || newScenario === $engine?.scenario?.id} onclick={switchScenario} data-testid="election-scenario-apply">{t('loadui.election.scenarioApply')}</button>
+		</div>
 		<dl>
 			{#each fixed as [label, value]}
 				<div><dt>{label}</dt><dd class="mono">{value}</dd></div>
