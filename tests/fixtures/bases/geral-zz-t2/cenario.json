@@ -1,0 +1,25 @@
+{
+  "id": "geral-zz-t2",
+  "scenario": "geral-zz",
+  "label": "Votação no exterior - 2º turno",
+  "description": "Cenário de treinamento para votação no exterior.",
+  "fase": "te",
+  "pe": 2500,
+  "uf": "zz",
+  "turno": 2,
+  "municipio": 1,
+  "zona": 1,
+  "secao": 1,
+  "aliases": [
+    {
+      "source": "/dsk/fi/estatico",
+      "target": "/dsk/fe/estatico"
+    },
+    {
+      "source": "/dsk/fi/serialv.dat",
+      "target": "/dsk/fe/serialv.dat"
+    }
+  ],
+  "data": "geral-zz-t2.data",
+  "dataJs": "geral-zz-t2.data.js"
+}

@@ -1,0 +1,25 @@
+{
+  "id": "geral-zz-t1",
+  "scenario": "geral-zz",
+  "label": "Votação no exterior - 1º turno",
+  "description": "Cenário de treinamento para votação no exterior.",
+  "fase": "te",
+  "pe": 2500,
+  "uf": "zz",
+  "turno": 1,
+  "municipio": 1,
+  "zona": 1,
+  "secao": 1,
+  "aliases": [
+    {
+      "source": "/dsk/fi/estatico",
+      "target": "/dsk/fe/estatico"
+    },
+    {
+      "source": "/dsk/fi/serialv.dat",
+      "target": "/dsk/fe/serialv.dat"
+    }
+  ],
+  "data": "geral-zz-t1.data",
+  "dataJs": "geral-zz-t1.data.js"
+}

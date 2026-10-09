@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content="UrnaEmu — emulador da urna eletrônica brasileira que executa o aplicativo de votação original (VOTA) no navegador, para mostrar como ela funciona por dentro. Sem vínculo com o TSE." />
+		<link rel="icon" href="%sveltekit.assets%/favicon.svg" type="image/svg+xml" />
+		<link rel="canonical" href="https://eleicoes.rlaneth.com/urnaemu/" />
+		<meta name="theme-color" content="#1a3a8f" />
+		<title>UrnaEmu — emulador da urna eletrônica brasileira</title>
+
+		<!-- Open Graph -->
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="UrnaEmu" />
+		<meta property="og:title" content="UrnaEmu — emulador da urna eletrônica brasileira" />
+		<meta property="og:description" content="Executa o VOTA original — a versão WebAssembly do Simulador de Votação do TSE — no navegador, e reconstrói o resto: um dia de eleição completo, do teste de teclado ao boletim de urna. Sem vínculo com o TSE." />
+		<meta property="og:url" content="https://eleicoes.rlaneth.com/urnaemu/" />
+		<meta property="og:locale" content="pt_BR" />
+		<meta property="og:image" content="https://eleicoes.rlaneth.com/urnaemu/og-image.png" />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta property="og:image:alt" content="UrnaEmu — emulador da urna eletrônica brasileira" />
+
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content="UrnaEmu — emulador da urna eletrônica brasileira" />
+		<meta name="twitter:description" content="Executa o VOTA original no navegador e reconstrói o resto: um dia de eleição completo, do teste de teclado ao boletim de urna. Sem vínculo com o TSE." />
+		<meta name="twitter:image" content="https://eleicoes.rlaneth.com/urnaemu/og-image.png" />
+		<script>
+			// Apply the theme before first paint: a saved choice, else the OS color scheme.
+			try {
+				const saved = localStorage.getItem('urnaemu:tema');
+				const os = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				document.documentElement.dataset.theme = saved === 'light' || saved === 'dark' ? saved : os;
+			} catch {
+				document.documentElement.dataset.theme = 'light';
+			}
+		</script>
+		%sveltekit.head%
+	</head>
+	<body data-sveltekit-preload-data="off">
+		<!--
+			Persistent engine nodes. The original VOTA runtime looks these up by id on every
+			draw, so they are created once and only ever moved between panels, never re-rendered.
+			The sentinel [data-vota-key] tells the runtime an external keypad exists, so it does
+			not install its own keyboard handlers (which would double every key press).
+		-->
+		<div id="urnaemu-parking" aria-hidden="true">
+			<div class="screen-host" id="urnaemu-screen" data-testid="urna-screen">
+				<canvas id="uenux-screen" width="1280" height="800" aria-label="Tela da urna eletrônica"></canvas>
+			</div>
+			<pre id="mt"></pre>
+			<i data-vota-key="sentinela" hidden></i>
+		</div>
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>

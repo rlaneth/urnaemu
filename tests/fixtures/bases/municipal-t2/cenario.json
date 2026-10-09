@@ -1,0 +1,25 @@
+{
+  "id": "municipal-t2",
+  "scenario": "municipal",
+  "label": "Eleições Municipais - 2º turno",
+  "description": "Cenário de treinamento com Vereador e Prefeito.",
+  "fase": "te",
+  "pe": 2400,
+  "uf": "ac",
+  "turno": 2,
+  "municipio": 1,
+  "zona": 1,
+  "secao": 1,
+  "aliases": [
+    {
+      "source": "/dsk/fi/estatico",
+      "target": "/dsk/fe/estatico"
+    },
+    {
+      "source": "/dsk/fi/serialv.dat",
+      "target": "/dsk/fe/serialv.dat"
+    }
+  ],
+  "data": "municipal-t2.data",
+  "dataJs": "municipal-t2.data.js"
+}

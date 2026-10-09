@@ -1,0 +1,25 @@
+{
+  "id": "geral-t2",
+  "scenario": "geral",
+  "label": "Eleições Gerais - 2º turno",
+  "description": "Cenário de treinamento para Eleições Gerais.",
+  "fase": "te",
+  "pe": 2500,
+  "uf": "ac",
+  "turno": 2,
+  "municipio": 1,
+  "zona": 1,
+  "secao": 1,
+  "aliases": [
+    {
+      "source": "/dsk/fi/estatico",
+      "target": "/dsk/fe/estatico"
+    },
+    {
+      "source": "/dsk/fi/serialv.dat",
+      "target": "/dsk/fe/serialv.dat"
+    }
+  ],
+  "data": "geral-t2.data",
+  "dataJs": "geral-t2.data.js"
+}

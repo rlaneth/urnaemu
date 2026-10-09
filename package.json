@@ -1,0 +1,33 @@
+{
+	"name": "urnaemu",
+	"version": "0.1.0-beta.1",
+	"private": true,
+	"type": "module",
+	"packageManager": "pnpm@12.10.1",
+	"imports": {
+		"#lib/*": "./src/lib/*"
+	},
+	"scripts": {
+		"dev": "vite dev --port 8766",
+		"build": "vite build",
+		"preview": "vite preview --port 8766",
+		"deploy": "vite build && wrangler deploy",
+		"check": "svelte-kit sync && svelte-check --tsconfig ./jsconfig.json",
+		"verify:vendor": "python3 tests/verify_vendor.py",
+		"test:unit": "node --test \"tests/unit/*.test.mjs\"",
+		"test": "pnpm test:unit && python3 tests/verify_vendor.py && python3 tests/tse-schema-reader.py"
+	},
+	"devDependencies": {
+		"@fontsource-variable/inter": "^5.3.0",
+		"@fontsource-variable/manrope": "^5.3.0",
+		"@fontsource-variable/source-serif-4": "^5.3.0",
+		"@sveltejs/adapter-static": "^4.0.0",
+		"@sveltejs/kit": "^3.0.1",
+		"@sveltejs/vite-plugin-svelte": "^7.3.1",
+		"bits-ui": "^2.19.5",
+		"svelte": "^5.57.2",
+		"svelte-check": "^4.7.6",
+		"typescript": "^6.0.3",
+		"vite": "^8.3.3"
+	}
+}

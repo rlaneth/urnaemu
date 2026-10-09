@@ -1,0 +1,19 @@
+{
+	// Cloudflare Worker (Static Assets) that serves the built app at
+	// https://eleicoes.rlaneth.com/urnaemu/. The build is nested under build/urnaemu (see
+	// vite.config.js), so serving ./build maps /urnaemu/* to the right files. The route is more
+	// specific than the existing eleicoes.rlaneth.com/* worker, so it wins for this subpath.
+	//
+	// Deploy:  pnpm build && npx wrangler deploy      (needs a Cloudflare account + wrangler login)
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "urnaemu",
+	"compatibility_date": "2026-01-01",
+	"assets": {
+		"directory": "./build",
+		"html_handling": "auto-trailing-slash",
+		"not_found_handling": "404-page"
+	},
+	"routes": [
+		{ "pattern": "eleicoes.rlaneth.com/urnaemu/*", "zone_name": "rlaneth.com" }
+	]
+}

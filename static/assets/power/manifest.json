@@ -1,0 +1,55 @@
+{
+  "source": "Original embedded runtime battery assets; vertical counterparts of native urn icons",
+  "icons": [
+    {
+      "file": "img-ac-bateria-full.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-ac-bateria-full.jpg",
+      "sha256": "59cbbe944909164ffbd7b6a6b5a57360f6d1665bb41069fed1e5874958d29971"
+    },
+    {
+      "file": "img-ac-bateria-parcial.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-ac-bateria-parcial.jpg",
+      "sha256": "3d0e7ba76e82a021d40ee1765d0cf6831c7eba4fb72e9f8d0f9abacb3c2b0e8d"
+    },
+    {
+      "file": "img-ac-bateria-critical.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-ac-bateria-critical.jpg",
+      "sha256": "ca955d269a7fd2901e46d9d1604cc193a98c3ffd339944632fd97788b1ac0e61"
+    },
+    {
+      "file": "img-ac-sem-bateria.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-ac-sem-bateria.jpg",
+      "sha256": "7f1f8302c8a7c2a6240ed9968105b4dca1843b9304707aa4bbd9b94550a628dd"
+    },
+    {
+      "file": "img-bateria-full.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-bateria-full.jpg",
+      "sha256": "5e84044de88c32e85877ea0be88400a97214e068b62aa2c446f3c9262bb4d3b7"
+    },
+    {
+      "file": "img-bateria-parcial.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-bateria-parcial.jpg",
+      "sha256": "53142a528d3a4b1747de92c414e7773b91d090032b62f2d29dea79b0b8c725f4"
+    },
+    {
+      "file": "img-bateria-critical.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-bateria-critical.jpg",
+      "sha256": "3d2a42f8deb0df3bd742dc88da07b7e430f1ac02ad9f14c2f24114b817ce60cf"
+    },
+    {
+      "file": "img-bateria-ext-full.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-bateria-ext-full.jpg",
+      "sha256": "09f66922ec286864519c180c1a57149100f575628670dda88f2374872684ec73"
+    },
+    {
+      "file": "img-bateria-ext-parcial.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-bateria-ext-parcial.jpg",
+      "sha256": "260f403d975801bcc9828332a7f1ff587e71abdc0ea6c04cf1b1907a1bb1f928"
+    },
+    {
+      "file": "img-bateria-ext-critical.jpg",
+      "source": "src/extracted/vota_web_wasm/uenux/app/img/bateria/img-bateria-ext-critical.jpg",
+      "sha256": "73504e07dd0a17e0abdcd18a31212385257adc8f101c8e128bf656b0e3fa6371"
+    }
+  ]
+}

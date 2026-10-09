@@ -1,0 +1,25 @@
+{
+  "id": "geral-df-t1",
+  "scenario": "geral-df",
+  "label": "Eleições Gerais no Distrito Federal - 1º turno",
+  "description": "Cenário de treinamento para Eleições Gerais no DF.",
+  "fase": "te",
+  "pe": 2500,
+  "uf": "df",
+  "turno": 1,
+  "municipio": 1,
+  "zona": 1,
+  "secao": 1,
+  "aliases": [
+    {
+      "source": "/dsk/fi/estatico",
+      "target": "/dsk/fe/estatico"
+    },
+    {
+      "source": "/dsk/fi/serialv.dat",
+      "target": "/dsk/fe/serialv.dat"
+    }
+  ],
+  "data": "geral-df-t1.data",
+  "dataJs": "geral-df-t1.data.js"
+}

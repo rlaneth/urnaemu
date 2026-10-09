@@ -1,0 +1,25 @@
+{
+  "id": "municipal-t1",
+  "scenario": "municipal",
+  "label": "Eleições Municipais - 1º turno",
+  "description": "Cenário de treinamento com Vereador e Prefeito.",
+  "fase": "te",
+  "pe": 2400,
+  "uf": "ac",
+  "turno": 1,
+  "municipio": 1,
+  "zona": 1,
+  "secao": 1,
+  "aliases": [
+    {
+      "source": "/dsk/fi/estatico",
+      "target": "/dsk/fe/estatico"
+    },
+    {
+      "source": "/dsk/fi/serialv.dat",
+      "target": "/dsk/fe/serialv.dat"
+    }
+  ],
+  "data": "municipal-t1.data",
+  "dataJs": "municipal-t1.data.js"
+}

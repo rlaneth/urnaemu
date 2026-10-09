@@ -1,0 +1,8 @@
+{
+ "source": "TSE public ASN.1 specifications (BU, RDV, signature)",
+ "sha256": {
+  "assinatura.asn1": "86a0edf579b91e0a6df9f0981521e0229f41cb6cab0ed8a66d8a56f68c1f396f",
+  "bu.asn1": "ef64bf723f774403b423ed0b617f5a83a3f50c0023d0003e18cd29170404ab81",
+  "rdv.asn1": "282dcde0c7ba1f1bb128fe27443ad8d18f7490416c9546d033910a7ec557a465"
+ }
+}

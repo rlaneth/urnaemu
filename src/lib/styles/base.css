@@ -1,0 +1,273 @@
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	height: 100%;
+}
+
+body {
+	background: var(--bg);
+	background-attachment: fixed;
+	color: var(--text);
+	font: 15px/1.55 var(--font-body);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+::selection {
+	background: var(--selection);
+}
+
+/* Thin, unobtrusive scrollbars. The native ones are heavy, overflow the
+   floating panels and crowd the resize handle in the corner; these leave the
+   track transparent and keep a clear corner so the handle stays reachable. */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+::-webkit-scrollbar {
+	width: 12px;
+	height: 12px;
+}
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+	background: transparent;
+}
+::-webkit-scrollbar-thumb {
+	border: 3px solid transparent;
+	border-radius: 999px;
+	background-color: var(--scrollbar-thumb);
+	background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: var(--scrollbar-thumb-hover);
+}
+
+h1,
+h2,
+h3,
+h4 {
+	font-family: var(--font-display);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	line-height: 1.25;
+	margin: 0;
+}
+
+p {
+	margin: 0;
+}
+
+a {
+	color: var(--accent);
+	text-decoration-thickness: 1px;
+	text-underline-offset: 3px;
+}
+
+code,
+pre,
+kbd {
+	font-family: var(--font-mono);
+	font-size: 0.86em;
+}
+
+kbd {
+	display: inline-block;
+	min-width: 1.6em;
+	padding: 1px 6px;
+	border: 1px solid var(--border-strong);
+	border-bottom-width: 2px;
+	border-radius: 5px;
+	background: var(--surface);
+	color: var(--text);
+	text-align: center;
+	line-height: 1.4;
+}
+
+:focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+/* ---- Buttons ---- */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--space-2);
+	min-height: 38px;
+	padding: 6px 16px;
+	border: 1px solid var(--border-strong);
+	border-radius: var(--radius-sm);
+	background: var(--surface);
+	color: var(--text);
+	font: 500 13.5px/1 var(--font-body);
+	cursor: pointer;
+	white-space: nowrap;
+	transition:
+		background 0.15s var(--ease),
+		border-color 0.15s var(--ease),
+		color 0.15s var(--ease);
+}
+.btn:hover:not(:disabled) {
+	background: var(--surface-hover);
+	border-color: var(--accent);
+}
+.btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+.btn.primary {
+	background: var(--accent);
+	border-color: var(--accent);
+	color: var(--on-accent);
+}
+.btn.primary:hover:not(:disabled) {
+	background: var(--accent-hover);
+	border-color: var(--accent-hover);
+}
+.btn.ghost {
+	border-color: transparent;
+	background: transparent;
+}
+.btn.ghost:hover:not(:disabled) {
+	background: var(--accent-soft);
+	border-color: transparent;
+}
+.btn.small {
+	min-height: 32px;
+	padding: 4px 12px;
+	font-size: 13px;
+}
+.btn.danger {
+	color: var(--danger);
+}
+
+/* ---- Form controls ---- */
+.field {
+	display: grid;
+	gap: 6px;
+	font-size: 13px;
+	color: var(--muted);
+}
+.input,
+select.input,
+textarea.input {
+	width: 100%;
+	min-height: 34px;
+	padding: 6px 10px;
+	border: 1px solid var(--border-strong);
+	border-radius: var(--radius-sm);
+	background: var(--surface);
+	color: var(--text);
+	font: 14px/1.4 var(--font-body);
+}
+textarea.input {
+	font-family: var(--font-mono);
+	font-size: 12.5px;
+	resize: vertical;
+}
+.input:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.check {
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
+	font-size: 14px;
+	color: var(--text);
+	cursor: pointer;
+}
+.check input {
+	margin-top: 4px;
+	accent-color: var(--accent);
+}
+
+/* ---- Text helpers ---- */
+.eyebrow {
+	font: 600 11px/1.2 var(--font-display);
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+.muted {
+	color: var(--muted);
+}
+.small {
+	font-size: 13px;
+}
+.editorial {
+	font-family: var(--font-editorial);
+	font-size: 16px;
+	line-height: 1.65;
+}
+.mono {
+	font-family: var(--font-mono);
+}
+/* Status text: a short coloured label (no chip background). */
+.state {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	color: var(--muted);
+	font: 500 12.5px/1.4 var(--font-body);
+	white-space: nowrap;
+}
+.state.accent {
+	color: var(--accent);
+}
+.state.success {
+	color: var(--success);
+}
+.state.warning {
+	color: var(--warning);
+}
+.state.danger {
+	color: var(--danger);
+}
+.dot {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: currentColor;
+}
+
+.stack {
+	display: grid;
+	gap: var(--space-4);
+}
+.row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--space-2);
+	align-items: center;
+}
+.code-block {
+	margin: 0;
+	padding: var(--space-3) var(--space-4);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-sm);
+	background: var(--surface-alt);
+	color: var(--text);
+	font: 12px/1.5 var(--font-mono);
+	white-space: pre-wrap;
+	overflow: auto;
+	max-height: 360px;
+}
+
+/* Component display rules must never defeat the hidden attribute. */
+[hidden] {
+	display: none !important;
+}
+
+/* The persistent engine nodes wait here until a panel adopts them. */
+#urnaemu-parking {
+	display: none;
+}

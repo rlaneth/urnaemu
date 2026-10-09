@@ -1,0 +1,61 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+import { renameMunicipio, createZona, changeUf } from '#lib/engine/load/places-edit.js';
+import { places, relocate } from '#lib/engine/load/section-relocation.js';
+import { VotaLoadFormat as F } from '#lib/engine/load/load-format.js';
+
+const bases = new URL('../fixtures/bases/', import.meta.url);
+function load(scenario) {
+	const dir = new URL(`${scenario}/dsk/fi/estatico/`, bases), files = new Map();
+	for (const name of fs.readdirSync(dir)) files.set('/dsk/fi/estatico/' + name, new Uint8Array(fs.readFileSync(new URL(name, dir))));
+	return files;
+}
+const same = (a, b) => a.length === b.length && a.every((x, i) => x === b[i]);
+const home = { municipio: 1, zona: 1, secao: 1 };
+
+for (const scenario of ['municipal-t1', 'geral-t1']) {
+	const files = load(scenario);
+
+	// parse → encode is byte-identical for the files we edit (encode matches the TSE's BER
+	// convention, so appending/editing a record never disturbs the others).
+	for (const re of [/-mu\.dat$/, /-mz\.dat$/]) {
+		const path = [...files.keys()].find((p) => re.test(p));
+		assert.ok(same(F.encode(F.parse(files.get(path))), files.get(path)), `${scenario}: ${path} re-encodes identically`);
+	}
+
+	// Rename an existing município: -mu record and the current section's -lo record both update.
+	const renamed = renameMunicipio(files, 1, 'Cidade Modelo').files;
+	assert.equal(places(renamed).find((p) => p.municipio === 1).nome, 'Cidade Modelo');
+	const loPath = [...renamed.keys()].find((p) => /-lo\.dat$/.test(p));
+	assert.equal(F.parse(renamed.get(loPath)).children[3].children[1].text, 'Cidade Modelo', `${scenario}: -lo município name updated`);
+
+	// Create a new zona in município 1.
+	const built = createZona(files, 1, 5).files;
+	const mun1 = places(built).find((p) => p.municipio === 1);
+	assert.deepEqual(mun1.zonas.sort((a, b) => a - b), [1, 5], `${scenario}: new zona listed`);
+	// The other municípios are untouched.
+	assert.deepEqual(places(built).filter((p) => p.municipio !== 1).map((p) => [p.municipio, p.zonas]), [[2, [2]], [3, [3]]]);
+
+	// The section can be relocated into the new zona.
+	const moved = relocate(built, home, { municipio: 1, zona: 5, secao: 12 });
+	assert.ok([...moved.files.keys()].some((n) => n.endsWith('0000100050012-lo.dat')), `${scenario}: section moved into new zona`);
+
+	// UF change renames files and rewrites the UF text, and round-trips byte for byte.
+	const toSp = changeUf(files, { uf: 'ac' }, 'sp');
+	assert.equal(toSp.config.uf, 'sp');
+	assert.ok([...toSp.files.keys()].some((n) => /[to]\d{5}sp/.test(n)), `${scenario}: files renamed to sp`);
+	assert.ok(![...toSp.files.keys()].some((n) => /[to]\d{5}ac/.test(n)), `${scenario}: no ac file names left`);
+	if (scenario.startsWith('geral')) assert.ok([...toSp.files.keys()].some((n) => /br00000/.test(n)), 'national br package kept');
+	const back = changeUf(toSp.files, { uf: 'sp' }, 'ac');
+	assert.deepEqual([...back.files.keys()].sort(), [...files.keys()].sort(), `${scenario}: names restored`);
+	for (const [p, b] of files) assert.ok(same(back.files.get(p), b), `${scenario}: ${p} uf round trip`);
+	assert.throws(() => changeUf(files, { uf: 'ac' }, 'xyz'), /UF inválida/);
+
+	// Guard rails.
+	assert.throws(() => createZona(files, 1, 1), /já existe/);
+	assert.throws(() => createZona(files, 9, 9), /não existe/);
+	assert.throws(() => createZona(files, 1, 10000), /de 1 a 9999/);
+	assert.throws(() => renameMunicipio(files, 9, 'X'), /não existe/);
+	assert.throws(() => renameMunicipio(files, 1, ''), /em branco/);
+}
+console.log('PASS: município rename, new-zona creation and UF change (round-trips byte for byte); new zonas are relocatable and keep the originals intact.');

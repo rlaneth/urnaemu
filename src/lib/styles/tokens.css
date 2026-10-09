@@ -1,0 +1,112 @@
+/* UrnaEmu design tokens. Visual language after wiki.return.moe: Inter body text,
+   Manrope display, Source Serif 4 editorial; dark blue accent; light by default. */
+:root,
+:root[data-theme='light'] {
+	color-scheme: light;
+	--bg: #f6f7fb;
+	--surface: #ffffff;
+	--surface-alt: #eef1f7;
+	--surface-hover: #f2f4f9;
+	--text: #171b2b;
+	--muted: #565e73;
+	--faint: #8a91a5;
+	--border: #1f2a4424;
+	--border-strong: #1f2a443d;
+	--scrollbar-thumb: #1f2a4440;
+	--scrollbar-thumb-hover: #1f2a4466;
+	--accent: #1a3a8f;
+	--accent-hover: #142f75;
+	--accent-soft: #1a3a8f12;
+	--accent-softer: #1a3a8f0a;
+	--on-accent: #ffffff;
+	--danger: #b42318;
+	--danger-soft: #b4231812;
+	--success: #1d7a46;
+	--success-soft: #1d7a4614;
+	--warning: #8a5a00;
+	--warning-soft: #b4780018;
+	--selection: #d6def5;
+	--shadow-sm: 0 1px 2px #1f2a440f;
+	--shadow-md: 0 8px 24px #1f2a4414;
+	--shadow-lg: 0 18px 48px #1f2a441f;
+	/* Physical devices (screens excluded). */
+	--paper: #fffef9;
+	--paper-ink: #171914;
+	--paper-note: #5b625a;
+	--paper-cut: #b0ada4;
+	--urna-case: linear-gradient(170deg, #fbfbfc 0%, #eceef1 60%, #dfe2e6 100%);
+	--urna-case-edge: #c3c6cb;
+	--urna-model: #c4c7cc;
+	--urna-model-border: #cdd0d5;
+	--urna-emboss: #ffffff;
+	--terminal-case: linear-gradient(170deg, #fbfbfc 0%, #eceef1 60%, #dfe2e6 100%);
+	--terminal-case-edge: #c3c6cb;
+	--reader-housing: linear-gradient(180deg, #d9dce0, #c4c8cd);
+}
+
+:root[data-theme='dark'] {
+	color-scheme: dark;
+	--bg: #070811;
+	--surface: #10131f;
+	--surface-alt: #151827;
+	--surface-hover: #191d2e;
+	--text: #f3f5ff;
+	--muted: #b6bdd1;
+	--faint: #7d849c;
+	--border: #bbc9ff24;
+	--border-strong: #bbc9ff3d;
+	--scrollbar-thumb: #bbc9ff33;
+	--scrollbar-thumb-hover: #bbc9ff55;
+	--accent: #8fa9ff;
+	--accent-hover: #b3c5ff;
+	--accent-soft: #8fa9ff1f;
+	--accent-softer: #8fa9ff10;
+	--on-accent: #070811;
+	--danger: #ff8a7a;
+	--danger-soft: #ff8a7a1a;
+	--success: #6fd39b;
+	--success-soft: #6fd39b1a;
+	--warning: #f2c46d;
+	--warning-soft: #f2c46d1a;
+	--selection: #2d3a6b;
+	--shadow-sm: 0 1px 2px #0000004d;
+	--shadow-md: 0 8px 24px #00000059;
+	--shadow-lg: 0 18px 48px #00000073;
+	--paper: #24262b;
+	--paper-ink: #e7e5dd;
+	--paper-note: #9ea39c;
+	--paper-cut: #5a5d63;
+	--urna-case: linear-gradient(170deg, #383b40 0%, #2f3236 60%, #282a2e 100%);
+	--urna-case-edge: #45484e;
+	--urna-model: #4a4d53;
+	--urna-model-border: #4a4d53;
+	--urna-emboss: #3c3f45;
+	--terminal-case: linear-gradient(170deg, #383b40 0%, #2f3236 60%, #282a2e 100%);
+	--terminal-case-edge: #45484e;
+	--reader-housing: linear-gradient(180deg, #4a4e54, #3c3f45);
+}
+
+:root {
+	--font-body: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+	--font-display: 'Manrope Variable', 'Manrope', var(--font-body);
+	--font-editorial: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, serif;
+	--font-mono: ui-monospace, 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+
+	--space-1: 4px;
+	--space-2: 8px;
+	--space-3: 12px;
+	--space-4: 16px;
+	--space-5: 24px;
+	--space-6: 32px;
+	--space-7: 48px;
+	--space-8: 64px;
+
+	--radius-sm: 6px;
+	--radius: 10px;
+	--radius-lg: 16px;
+
+	--content-max: 960px;
+	--menubar-height: 60px;
+	--layout-max: 1680px;
+	--ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+}

@@ -1,0 +1,21 @@
+node_modules/
+.svelte-kit/
+build/
+__pycache__/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Logs and local env
+*.log
+.env
+.env.*
+!.env.example
+
+# Test evidence / local artifacts (kept out of the project per the test harness)
+urnaemu-evidence/
+urnaemu-screenshots/

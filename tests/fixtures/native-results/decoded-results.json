@@ -1,0 +1,236 @@
+{
+  "envelope": {
+    "cabecalho": {
+      "dataGeracao": "20261007T011801",
+      "idEleitoral": {
+        "idPleito": 2410
+      }
+    },
+    "fase": 3,
+    "identificacao": {
+      "identificacaoSecaoEleitoral": {
+        "municipioZona": {
+          "municipio": 1,
+          "zona": 1
+        },
+        "local": 1011,
+        "secao": 1
+      }
+    },
+    "tipoEnvelope": 1,
+    "conteudo": "decoded below"
+  },
+  "bu": {
+    "cabecalho": {
+      "dataGeracao": "20261007T011801",
+      "idEleitoral": {
+        "idPleito": 2410
+      }
+    },
+    "fase": 3,
+    "urna": {
+      "tipoUrna": 1,
+      "versaoVotacao": "10.23.0.1 - DESENVOLVIMENTO",
+      "correspondenciaResultado": {
+        "identificacao": {
+          "identificacaoSecaoEleitoral": {
+            "municipioZona": {
+              "municipio": 1,
+              "zona": 1
+            },
+            "local": 1,
+            "secao": 1
+          }
+        },
+        "carga": {
+          "numeroInternoUrna": 87654321,
+          "numeroSerieFC": {
+            "hex": "12345678"
+          },
+          "identificadorGeradorMidia": {
+            "nome": "nome_maquina",
+            "serialCertificadoTPM": "12345678",
+            "serialInstalacao": "99999999"
+          },
+          "dataHoraCarga": "20201231T235958",
+          "codigoCarga": "123456789012345678901234"
+        }
+      },
+      "tipoArquivo": 1,
+      "numeroSerieFV": {
+        "hex": "00000000"
+      }
+    },
+    "identificacaoSecao": {
+      "municipioZona": {
+        "municipio": 1,
+        "zona": 1
+      },
+      "local": 1011,
+      "secao": 1
+    },
+    "dataHoraEmissao": "20261007T011801",
+    "dadosSecaoSA": {
+      "dadosSecao": {
+        "dataHoraAbertura": "20261007T011755",
+        "dataHoraEncerramento": "20261007T011800"
+      }
+    },
+    "qtdEleitoresCompareceram": 1,
+    "detalhamentoComparecimento": {
+      "qtdEleitoresCompareceramSemBiometria": 1,
+      "qtdEleitoresHabilitadosPorBiometria": 0,
+      "qtdEleitoresHabilitadosPorBiografia": 0
+    },
+    "resultadosVotacaoPorEleicao": [
+      {
+        "idEleicao": 2411,
+        "qtdEleitoresAptos": 1,
+        "qtdEleitoresAptosSecao": 1,
+        "qtdEleitoresAptosTTE": 0,
+        "resultadosVotacao": [
+          {
+            "tipoCargo": 2,
+            "qtdComparecimento": 1,
+            "totaisVotosCargo": [
+              {
+                "codigoCargo": {
+                  "cargoConstitucional": 13
+                },
+                "ordemImpressao": 1,
+                "votosVotaveis": [
+                  {
+                    "tipoVoto": 2,
+                    "quantidadeVotos": 1,
+                    "ordemGeracaoHash": 1,
+                    "hash": {
+                      "hex": "9fbd65b3c02d1eb48a908e5c8ebfb008b593aab5a49b8f79fd8b6136910e9e6c0242cf5395d48fb955d34640b335e88cf2d8a23607ebb08977c924a14a992b0e"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tipoCargo": 1,
+            "qtdComparecimento": 1,
+            "totaisVotosCargo": [
+              {
+                "codigoCargo": {
+                  "cargoConstitucional": 11
+                },
+                "ordemImpressao": 2,
+                "votosVotaveis": [
+                  {
+                    "tipoVoto": 2,
+                    "quantidadeVotos": 1,
+                    "ordemGeracaoHash": 1,
+                    "hash": {
+                      "hex": "ef71a60a810d972840c3cfcbb553fa42adda43c2ee5ad71e9155b94581ab21663e374526b8d611500b6dde3410549fbc827ee2bc5217bfbea049d186bfae42e6"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "ultimoHashVotosVotavel": {
+          "hex": "ef71a60a810d972840c3cfcbb553fa42adda43c2ee5ad71e9155b94581ab21663e374526b8d611500b6dde3410549fbc827ee2bc5217bfbea049d186bfae42e6"
+        },
+        "assinaturaUltimoHashVotosVotavel": {
+          "hex": "3081870242019e843dc2ef05cf50e0b3e097740b0391a0822b903494ccb9112ddc72a77249525c956046888689105a9c23d733a9804cbe30264e1fcd4f419bd3237f644b8d14b90241554287e6813d42e7a044f86f88b798f2da3d81c466cb18cfdbfb1994cd39137c03f1e03e15a69cec0761e17e1b583759a29f35adc1bb3bd6f994d5579e32821daa"
+        }
+      }
+    ],
+    "historicoCodigosCarga": [
+      "000000000000000000001"
+    ]
+  },
+  "rdv": {
+    "cabecalho": {
+      "dataGeracao": "20261007T011801",
+      "idEleitoral": {
+        "idPleito": 2410
+      }
+    },
+    "urna": {
+      "tipoUrna": 1,
+      "versaoVotacao": "10.23.0.1 - DESENVOLVIMENTO",
+      "correspondenciaResultado": {
+        "identificacao": {
+          "identificacaoSecaoEleitoral": {
+            "municipioZona": {
+              "municipio": 1,
+              "zona": 1
+            },
+            "local": 1,
+            "secao": 1
+          }
+        },
+        "carga": {
+          "numeroInternoUrna": 87654321,
+          "numeroSerieFC": {
+            "hex": "12345678"
+          },
+          "identificadorGeradorMidia": {
+            "nome": "nome_maquina",
+            "serialCertificadoTPM": "12345678",
+            "serialInstalacao": "99999999"
+          },
+          "dataHoraCarga": "20201231T235958",
+          "codigoCarga": "123456789012345678901234"
+        }
+      },
+      "tipoArquivo": 1,
+      "numeroSerieFV": {
+        "hex": "00000000"
+      }
+    },
+    "rdv": {
+      "pleito": 2410,
+      "fase": 3,
+      "identificacao": {
+        "municipioZona": {
+          "municipio": 1,
+          "zona": 1
+        },
+        "local": 1011,
+        "secao": 1
+      },
+      "historicoCodigosCarga": [
+        "000000000000000000001"
+      ],
+      "eleicoes": {
+        "eleicoesVota": [
+          {
+            "idEleicao": 2411,
+            "votosCargos": [
+              {
+                "idCargo": {
+                  "cargoConstitucional": 11
+                },
+                "quantidadeEscolhas": 1,
+                "votos": [
+                  {
+                    "tipoVoto": 3
+                  }
+                ]
+              },
+              {
+                "idCargo": {
+                  "cargoConstitucional": 13
+                },
+                "quantidadeEscolhas": 1,
+                "votos": [
+                  {
+                    "tipoVoto": 3
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

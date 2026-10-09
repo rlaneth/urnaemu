@@ -1,0 +1,133 @@
+/* Engine-owned DOM (urna screen host, printer paper) is styled globally. */
+
+/* The urna screen font, as declared by the TSE simulator (css/vota-wasm.css). The vendor
+   runtime draws canvas text with this family; the engine loads it before booting. */
+@font-face {
+	font-family: 'Atkinson Hyperlegible Next';
+	src: url('/vendor/fonts/AtkinsonHyperlegibleNext-Regular.woff2') format('woff2');
+	font-weight: 400;
+}
+@font-face {
+	font-family: 'Atkinson Hyperlegible Next';
+	src: url('/vendor/fonts/AtkinsonHyperlegibleNext-Bold.woff2') format('woff2');
+	font-weight: 700;
+}
+
+/* ---- Urna screen: the vendor runtime draws into #uenux-screen and positions
+   #uenux-gif-layer in its parent; keep the layer glued to the responsive canvas. ---- */
+.screen-host {
+	position: relative;
+	width: 100%;
+	aspect-ratio: 16 / 10;
+	overflow: hidden;
+	isolation: isolate;
+	background: #000;
+}
+.screen-host > #uenux-screen {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+.screen-host > #uenux-gif-layer {
+	inset: 0 !important;
+	left: 0 !important;
+	top: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+/* ---- Thermal paper ---- */
+.printer-paper {
+	container-type: inline-size;
+	width: 80mm;
+	max-width: 100%;
+	margin: 0 auto;
+	min-height: 100%;
+	padding: 5mm 3mm 8mm;
+	background: var(--paper);
+	color: var(--paper-ink);
+	box-shadow:
+		0 1px 0 #0000000d,
+		0 10px 24px #1f2a4426;
+	font: 12px/1.3 'Courier New', Courier, monospace;
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+.paper-line {
+	font-size: min(12px, 4.3cqw);
+	line-height: 1.3;
+	min-height: 1.3em;
+}
+/* A cut: the paper piece ends with a serrated edge, a gap shows the background, and the
+   next piece starts with a serrated edge. */
+.paper-cut {
+	position: relative;
+	display: grid;
+	place-items: center;
+	height: 34px;
+	margin: 18px -3mm;
+	background: var(--surface-alt);
+}
+.paper-cut::before,
+.paper-cut::after {
+	content: '';
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 6px;
+	background-size: 10px 6px;
+	background-repeat: repeat-x;
+}
+.paper-cut::before {
+	top: 0;
+	background-image: conic-gradient(from 135deg at 50% 0, var(--paper) 90deg, transparent 0);
+}
+.paper-cut::after {
+	bottom: 0;
+	background-image: conic-gradient(from -45deg at 50% 100%, var(--paper) 90deg, transparent 0);
+}
+.paper-cut-mark {
+	font: 500 10px/1 var(--font-body);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--faint);
+	user-select: none;
+}
+.paper-note {
+	font: 11px/1.4 var(--font-body);
+	color: var(--paper-note);
+	margin: 12px 0;
+}
+.paper-qr-code {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin: 18px auto;
+	background: white;
+	image-rendering: pixelated;
+}
+/* QR bitmaps are drawn black-on-white; on dark paper show them light-on-dark. */
+:root[data-theme='dark'] .paper-qr-code {
+	filter: invert(0.9);
+}
+
+@media print {
+	body.printing-paper > :not(.print-sheet) {
+		display: none !important;
+	}
+	body.printing-paper .print-sheet {
+		display: block !important;
+	}
+	body.printing-paper .print-sheet .printer-paper {
+		width: 80mm;
+		max-width: 80mm;
+		padding: 3mm;
+		box-shadow: none;
+	}
+	body.printing-paper .print-sheet .printer-paper::before {
+		content: 'SAÍDA SIMULADA — CAPTURA DO RELATÓRIO NATIVO ORIGINAL';
+		display: block;
+		font: 10px sans-serif;
+		margin-bottom: 15px;
+	}
+}

@@ -1,0 +1,168 @@
+[
+  {
+    "export": "Db",
+    "index": 14478,
+    "params": [],
+    "result": "nil"
+  },
+  {
+    "export": "Eb",
+    "index": 7840,
+    "params": [
+      "i32"
+    ],
+    "result": "i32"
+  },
+  {
+    "export": "Gb",
+    "index": 10703,
+    "params": [
+      "i32"
+    ],
+    "result": "nil"
+  },
+  {
+    "export": "Hb",
+    "index": 10619,
+    "params": [],
+    "result": "i32"
+  },
+  {
+    "export": "Ib",
+    "index": 10240,
+    "params": [
+      "i32"
+    ],
+    "result": "nil"
+  },
+  {
+    "export": "Jb",
+    "index": 10171,
+    "params": [],
+    "result": "i32"
+  },
+  {
+    "export": "Kb",
+    "index": 10307,
+    "params": [
+      "i32",
+      "i32"
+    ],
+    "result": "i32"
+  },
+  {
+    "export": "Lb",
+    "index": 9614,
+    "params": [
+      "i32"
+    ],
+    "result": "i32"
+  },
+  {
+    "export": "Mb",
+    "index": 9604,
+    "params": [
+      "i32",
+      "i32"
+    ],
+    "result": "nil"
+  },
+  {
+    "export": "Nb",
+    "index": 6176,
+    "params": [
+      "i32"
+    ],
+    "result": "nil"
+  },
+  {
+    "export": "Ob",
+    "index": 12144,
+    "params": [
+      "i32"
+    ],
+    "result": "nil"
+  },
+  {
+    "export": "Pb",
+    "index": 6263,
+    "params": [
+      "i32"
+    ],
+    "result": "i32"
+  },
+  {
+    "export": "Qb",
+    "index": 6263,
+    "params": [
+      "i32"
+    ],
+    "result": "i32"
+  },
+  {
+    "export": "Rb",
+    "index": 6227,
+    "params": [
+      "i32",
+      "i32"
+    ],
+    "result": "i32"
+  },
+  {
+    "export": "Sb",
+    "index": 12275,
+    "params": [
+      "i32",
+      "i32"
+    ],
+    "result": "nil"
+  },
+  {
+    "export": "Tb",
+    "index": 12274,
+    "params": [
+      "i32"
+    ],
+    "result": "nil"
+  },
+  {
+    "export": "Ub",
+    "index": 12122,
+    "params": [
+      "i32"
+    ],
+    "result": "nil"
+  },
+  {
+    "export": "Vb",
+    "index": 12119,
+    "params": [
+      "i32"
+    ],
+    "result": "i32"
+  },
+  {
+    "export": "Wb",
+    "index": 12118,
+    "params": [],
+    "result": "i32"
+  },
+  {
+    "export": "Xb",
+    "index": 12128,
+    "params": [
+      "i32",
+      "i32",
+      "i32"
+    ],
+    "result": "i32"
+  },
+  {
+    "export": "Yb",
+    "index": 12127,
+    "params": [
+      "i32"
+    ],
+    "result": "i32"
+  }
+]

@@ -1,0 +1,28 @@
+{
+ "source": "static/vendor/SHA256SUMS (TSE Simulador de Vota\u00e7\u00e3o, snapshot 2026-10-06)",
+ "files": {
+  "vendor/wasm/bases/geral-df-t1.data": "375423e67054e529664028ff97355337ea48fa541fb6f4e1dcafe30214cd465d",
+  "vendor/wasm/bases/geral-df-t1.data.js": "a7a46fe82a765c8727e12857548bdedbdf67fc2d12612dcca0a7837644e32557",
+  "vendor/wasm/bases/geral-df-t2.data": "a55361aabd2409f9948931dd0c91c41506a8ea77ddab102250fbdf35daaf0102",
+  "vendor/wasm/bases/geral-df-t2.data.js": "eab5cb228cb724fe71db3916e625b863336be4efabbc8e3cd2bc93250792e007",
+  "vendor/wasm/bases/geral-t1.data": "84aa2e1e660ec59017c7c3084d7dee5bacc5d39123c6b911cd47194eebac8cdb",
+  "vendor/wasm/bases/geral-t1.data.js": "f7c719e97029b4dd01176f2a37ae3bafbf70991e0af41115eb33f311ebb5b37d",
+  "vendor/wasm/bases/geral-t2.data": "316cc5bef1d57d924f74dbc7bdb5efdcd1b21ee218623efd088977ccba297b64",
+  "vendor/wasm/bases/geral-t2.data.js": "fdd90ed1188af297421319fd5bb08aa06712495cced4560918c4517d16b3b766",
+  "vendor/wasm/bases/geral-zz-t1.data": "6fe58072d5679b47c2185e12c4f1f1452b598ab633848342d4e1662dcc4cab80",
+  "vendor/wasm/bases/geral-zz-t1.data.js": "9139e927b2b559386041f22380b250591dcbd92d41b34c8672ac783ffa362a82",
+  "vendor/wasm/bases/geral-zz-t2.data": "5dfa665aadc2118a76b00c2fa8b83cde7a99573d69ebf8c42502b7967ec546e9",
+  "vendor/wasm/bases/geral-zz-t2.data.js": "50e2352e7ef0610b0319a9a92a6f5f334a39549496e072c7940778974a8cd71e",
+  "vendor/wasm/bases/manifest.json": "6dc689e4e08d89b3c102e8847528534712fe72d44aacd3967c38e8754561f882",
+  "vendor/wasm/bases/municipal-t1.data": "0e8ab495df9fdaf6d1247decb9361843252cc30db325c148f10f5eabcf30d5f3",
+  "vendor/wasm/bases/municipal-t1.data.js": "085b1356cfaabe671eca909d74c4291aaf416ccb042c556e857f969fff0a51ff",
+  "vendor/wasm/bases/municipal-t2.data": "83e753c939bdadbd436b4cfccddcfcab5797028f1065db5876fbe1f9f18caafa",
+  "vendor/wasm/bases/municipal-t2.data.js": "623397ad23b0ea611e9e1bc7a05e35fd7d7aa3957d58f93a7ae75ef4c8e0e38b",
+  "vendor/wasm/rhvoice-leticia.data": "c33b984b066dcbb594cb89ae161e6c0e178ede59c86ce59f5251efb428d0584a",
+  "vendor/wasm/rhvoice-leticia.data.js": "2edac3331d0793434c48b8eee123f38e8ed010124c087e8322e89ef9eb395c12",
+  "vendor/wasm/vota_web_wasm.data": "fbb19714507f63063a4b45773699297d7925e666e1eef407d9403b733457da4c",
+  "vendor/wasm/vota_web_wasm.js": "31e985a01b80449c78c726e4070355bd9875c7a2df7f6fac8b69c61f49248754",
+  "vendor/wasm/vota_web_wasm.version": "4acdf2439e4982ba5ba67b007f9007670581646756eb27ac31e540f4f95897a7",
+  "vendor/wasm/vota_web_wasm.wasm": "8579ef8d1a93819152cecdbf52906d2e4dd0f57999cb2e1e8c0d1161cd1007e2"
+ }
+}

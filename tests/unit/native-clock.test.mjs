@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {createNativeClock} from '#lib/engine/devices/clock.js';
+globalThis.sessionStorage=new Map();sessionStorage.getItem=sessionStorage.get.bind(sessionStorage);sessionStorage.setItem=sessionStorage.set.bind(sessionStorage);
+const app={exports:{Cb:new WebAssembly.Memory({initial:1})}};let notified=0;const clock=createNativeClock({app,log:()=>{},notify:()=>notified++});
+let delegated=0;const monotonic=()=>performance.now(),sleep=()=>{},imports={a:{aa:()=>0,R:()=>Date.now(),ia:()=>{delegated++;return 42},O:monotonic,s:sleep}};
+clock.install(imports);clock.configure({mode:'fixed',iso:'2026-10-04T11:00:00Z'});
+const now=Date.parse('2026-10-04T11:00:00Z');assert.equal(imports.a.R(),now);assert.equal(imports.a.aa(),now/1000-new Date(now).getTimezoneOffset()*60);assert.equal(imports.a.ia(0,0n,16),0);assert.equal(new DataView(app.exports.Cb.buffer).getBigInt64(16,true),BigInt(now)*1000000n);
+assert.equal(imports.a.ia(1,0n,16),42);assert.equal(imports.a.ia(99,0n,16),42);assert.equal(delegated,2);assert.equal(imports.a.O,monotonic);assert.equal(imports.a.s,sleep);
+await new Promise(r=>setTimeout(r,40));assert.equal(clock.now(),now);clock.configure({mode:'running',iso:'2026-10-04T11:00:00Z'});await new Promise(r=>setTimeout(r,40));assert(clock.now()>now+20);
+clock.configure({mode:'real',iso:'2026-10-04T11:00:00Z'});assert(Math.abs(clock.now()-Date.now())<20);assert.throws(()=>clock.configure({mode:'fixed',iso:'bad'}));assert.throws(()=>clock.configure({mode:'fixed',iso:'2200-01-01'}));
+assert(notified>0);
+console.log(JSON.stringify({fixed:true,running:true,real:true,realtimeNanoseconds:true,monotonicAndSleepUnchanged:true,invalidDatesRejected:true}));
