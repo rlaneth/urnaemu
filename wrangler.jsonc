@@ -8,12 +8,19 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "urnaemu",
 	"compatibility_date": "2026-01-01",
+	"main": "worker/index.js",
 	"assets": {
 		"directory": "./build",
+		"binding": "ASSETS",
+		"run_worker_first": true,
 		"html_handling": "auto-trailing-slash",
 		"not_found_handling": "404-page"
 	},
+	// The bare /urnaemu (no trailing slash, how links usually get shared) must also reach this
+	// worker, which redirects it to /urnaemu/; otherwise the main site's worker answers it with
+	// its own 404 page, and link previews (WhatsApp, etc.) find no og:image.
 	"routes": [
+		{ "pattern": "eleicoes.rlaneth.com/urnaemu", "zone_name": "rlaneth.com" },
 		{ "pattern": "eleicoes.rlaneth.com/urnaemu/*", "zone_name": "rlaneth.com" }
 	]
 }
